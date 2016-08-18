@@ -1,0 +1,17 @@
+CREATE TABLE users (email varchar, username varchar,password_hash varchar,confirmed boolean, id INTEGER PRIMARY KEY,role_id integer REFERENCES roles(id),name varchar,location varchar,about_me text,member_since TIMESTAMP default (datetime('now', 'localtime')),last_seen TIMESTAMP default (datetime('now', 'localtime')));
+
+CREATE TABLE roles (name varchar, dafault boolean DEFAULT False,permissions integer,id INTEGER PRIMARY KEY);
+
+CREATE TABLE posts (body text,timestamp TIMESTAMP default (datetime('now', 'localtime')),id INTEGER PRIMARY KEY,author_id integer REFERENCES users(id),body_html text);
+
+CREATE TABLE follows(timestamp TIMESTAMP default (datetime('now', 'localtime')),follower_id INTEGER REFERENCES users(id),followed_id INTEGER REFERENCES users(id),primary key(follower_id,followed_id));
+
+CREATE TABLE comments (disabled boolean,body text,timestamp TIMESTAMP default (datetime('now', 'localtime')),id INTEGER PRIMARY KEY,author_id integer REFERENCES users(id),body_html text,post_id integer REFERENCES posts(id));
+
+
+python manage.py shell
+
+Role.insert_roles()
+User.generate_fake(100)
+Post.generate_fake(100)
+User.add_self_follows()
